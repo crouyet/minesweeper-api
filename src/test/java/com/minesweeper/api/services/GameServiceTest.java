@@ -23,7 +23,7 @@ class GameServiceTest {
         Integer INIT_COLS = 5;
         Integer INIT_MINES = 10;
 
-        GameInfo newGame = this.gameService.createGame(INIT_ROWS, INIT_COLS, INIT_MINES);
+        GameInfo newGame = this.gameService.createGame(INIT_COLS, INIT_ROWS, INIT_MINES);
 
         assertNotNull(newGame);
 
