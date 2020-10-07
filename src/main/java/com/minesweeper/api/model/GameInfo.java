@@ -36,13 +36,15 @@ public class GameInfo implements Serializable {
             }
         }
 
+    }
+
+    public void addMines() {
         Collections.shuffle(this.getBoard());
 
         this.getBoard()
                 .stream()
                 .limit(this.getMines())
                 .forEach(cellMine -> cellMine.setMine(true));
-
     }
 
     public void changeCellState(CellState newState,  Integer posX, Integer posY) {
@@ -65,7 +67,7 @@ public class GameInfo implements Serializable {
         cellIn.reveal(this.getBoard());
 
         if (this.noMinesLeft()) {
-            this.status = WON;
+            this.setStatus(WON);
         }
     }
 

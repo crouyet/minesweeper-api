@@ -38,7 +38,7 @@ public class GameController {
         }
 
         try {
-            GameInfo game = gameService.createGame(cols, rows, mines);
+            GameInfo game = gameService.create(cols, rows, mines);
             gameRepository.save(game);
             return ResponseEntity.ok(game);
 
@@ -49,25 +49,51 @@ public class GameController {
     }
 
     @PutMapping("{id}/{action}")
-    public ResponseEntity interact(
+    public ResponseEntity makeMove(
             // @CookieValue(value = "session") String session)
             @PathVariable(value = "id") String gameId,
             @PathVariable CellState action,
-            @RequestParam(value = "posX", defaultValue = "5") Integer posX,
-            @RequestParam(value = "posY", defaultValue = "5") Integer posY){
+            @RequestParam(value = "posX") Integer posX,
+            @RequestParam(value = "posY") Integer posY){
 
         try {
             GameInfo game = gameRepository
                 .findById(gameId)
-                .map( gameInfo -> gameService.interactCell(action, gameInfo, posX, posY))
-                .orElseThrow( () -> new InvalidGameException("Couldn't find game"));
+                .map( gameInfo -> gameService.makeMove(action, gameInfo, posX, posY))
+                .orElseThrow( () -> new InvalidGameException(String.format("Couldn't find game [%s]", gameId)));
 
-            return new ResponseEntity<>(game, HttpStatus.OK);
+            gameRepository.update(game);
+            return ResponseEntity.ok(game);
+
+        } catch(IllegalArgumentException e){
+            LOGGER.error(e.getMessage(), e);
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
 
         } catch(Exception e){
             LOGGER.error(String.format("Error trying to make a move for [%s]", gameId), e);
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
+    @PutMapping(value = "{id}/pause")
+    public ResponseEntity pauseGame(
+            // @CookieValue(value = "session") String session)
+            @PathVariable(value = "id") final String gameId) {
+        try {
+            GameInfo game = gameRepository
+                    .findById(gameId)
+                    .map( gameInfo -> gameService.pause(gameId))
+                    .orElseThrow( () -> new InvalidGameException(String.format("Couldn't find game [%s]", gameId)));
+
+            gameRepository.update(game);
+            return ResponseEntity.ok(game);
+        } catch(IllegalArgumentException e){
+            LOGGER.error(e.getMessage(), e);
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+
+        } catch (final Exception e) {
+            LOGGER.error(String.format("Error trying to pause game [%s]", gameId), e);
+            return new ResponseEntity<>(e,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

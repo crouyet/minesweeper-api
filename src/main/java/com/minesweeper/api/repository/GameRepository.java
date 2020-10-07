@@ -2,7 +2,6 @@ package com.minesweeper.api.repository;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 import com.minesweeper.api.model.GameInfo;
 import org.slf4j.Logger;
@@ -25,6 +24,7 @@ public class GameRepository implements  IRepository<GameInfo> {
 
     public Map<String,GameInfo> findAllByUser() {
         LOGGER.info("Retrieving games");
+        //TODO
         return hashOperations.entries(GAME_KEY);
     }
     @Override

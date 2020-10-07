@@ -17,11 +17,11 @@ public class Cell implements Serializable {
     CellState state;
     Boolean mine;
 
-    public Cell(final Integer posX, final Integer posY) {
+    public Cell(Integer posX, Integer posY) {
         this.posX = posX;
         this.posY = posY;
         this.mine = false;
-        this.state = CLOSED;
+        this.state = CLOSE;
     }
 
 
@@ -30,7 +30,7 @@ public class Cell implements Serializable {
     }
 
     public boolean isDiscovered() {
-        return DISCOVERED.equals(this.getState());
+        return DISCOVER.equals(this.getState());
     }
 
     public boolean withFlag() {
@@ -38,12 +38,22 @@ public class Cell implements Serializable {
     }
 
     public void reveal(List<Cell> board) {
-        this.setState(DISCOVERED);
-        //TODO
-        // List<Cell> adjacents = board.stream()
+        this.setState(DISCOVER);
 
+        board.stream()
+                .filter(otherCell -> otherCell.isDiscoverable() && this.isAdjacent(otherCell))
+                .forEach(otherCell -> otherCell.reveal(board));
 
     }
 
+    private boolean isDiscoverable() {
+        return !this.isMine() && !this.isDiscovered() && !this.withFlag();
+    }
 
+    private boolean isAdjacent(Cell otherCell){
+        int distanceX = Math.abs(this.getPosX() - otherCell.getPosX());
+        int distanceY = Math.abs(this.getPosY() - otherCell.getPosY());
+
+        return this != otherCell && distanceX <= 1 && distanceY <= 1;
+    }
 }
