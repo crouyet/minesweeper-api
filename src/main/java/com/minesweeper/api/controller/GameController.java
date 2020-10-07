@@ -25,7 +25,7 @@ public class GameController {
     GameService gameService;
 
     @GetMapping("/new")
-    public ResponseEntity startNew(
+    public ResponseEntity<GameInfo> startNew(
             //TODO: add session token
             // @CookieValue(value = "session") String session)
             @RequestParam(required = false, value = "user") String user,
@@ -34,22 +34,22 @@ public class GameController {
             @RequestParam(value = "mines", defaultValue = "10") Integer mines){
 
         if (mines >= cols*rows) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new IllegalArgumentException("Mines have to be less than squares available"), HttpStatus.BAD_REQUEST);
         }
 
         try {
             GameInfo game = gameService.create(cols, rows, mines);
             gameRepository.save(game);
-            return ResponseEntity.ok(game);
+            return new ResponseEntity<>(game, HttpStatus.CREATED);
 
         } catch(Exception e){
             LOGGER.error(String.format("Error trying to createBoard new game for user [%s]", user), e);
-            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("{id}/{action}")
-    public ResponseEntity makeMove(
+    public ResponseEntity<GameInfo> makeMove(
             // @CookieValue(value = "session") String session)
             @PathVariable(value = "id") String gameId,
             @PathVariable CellState action,
@@ -67,16 +67,16 @@ public class GameController {
 
         } catch(IllegalArgumentException e){
             LOGGER.error(e.getMessage(), e);
-            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(e, HttpStatus.BAD_REQUEST);
 
         } catch(Exception e){
             LOGGER.error(String.format("Error trying to make a move for [%s]", gameId), e);
-            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping(value = "{id}/pause")
-    public ResponseEntity pauseGame(
+    public ResponseEntity<GameInfo> pauseGame(
             // @CookieValue(value = "session") String session)
             @PathVariable(value = "id") final String gameId) {
         try {
@@ -89,11 +89,11 @@ public class GameController {
             return ResponseEntity.ok(game);
         } catch(IllegalArgumentException e){
             LOGGER.error(e.getMessage(), e);
-            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(e, HttpStatus.BAD_REQUEST);
 
         } catch (final Exception e) {
             LOGGER.error(String.format("Error trying to pause game [%s]", gameId), e);
-            return new ResponseEntity<>(e,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(e,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

@@ -1,7 +1,5 @@
 # minesweeper-api
 
-Spring Boot Application using Java 11 with Redis
-
 #####The list of tasks done (prioritized from most important to least important):
 
 - [x]  Design and implement  a documented RESTful API for the game (think of a mobile app for your API)
@@ -16,6 +14,14 @@ Spring Boot Application using Java 11 with Redis
 - [x]  Ability to support multiple users/accounts
 
 ## Getting Started
+
+Spring Boot Application using Java 11 with Redis
+
+###API Documentation
+Swagger API documentation for the game
+
+* [Local Link](http://localhost:8080/swagger-ui.html#/)
+* [Prod Link ](https://*****/swagger-ui.html#/)
 
 ###Decisions taken and Important notes
 * Users/accounts was implemented without a password or secure session owing to the given time. The implementation of this would be creating jwt tokens when the user logged in. So the user should send the JWT in each request and the backend should check if the token is valid and not expired
