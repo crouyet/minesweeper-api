@@ -1,6 +1,5 @@
 package com.minesweeper.api.config;
 
-import com.minesweeper.api.model.GameInfo;
 import com.minesweeper.api.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,8 +14,13 @@ public class JedisConfig {
 
     @Bean
     @Autowired
-    public JedisConnectionFactory redisConnectionFactory(@Value("${redis.host}") String host) {
-        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, 6379);
+    public JedisConnectionFactory redisConnectionFactory(
+            @Value("${redis.host}") String host,
+            @Value("${redis.port}") Integer port,
+            @Value("${redis.pass}") String pass) {
+
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
+        config.setPassword(pass);
         return  new JedisConnectionFactory(config);
     }
 
