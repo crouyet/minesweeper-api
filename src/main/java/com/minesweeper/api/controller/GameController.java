@@ -1,5 +1,6 @@
 package com.minesweeper.api.controller;
 
+import com.minesweeper.api.config.LocalStorage;
 import com.minesweeper.api.model.CellState;
 import com.minesweeper.api.model.GameInfo;
 import com.minesweeper.api.services.GameService;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static com.minesweeper.api.config.LocalStorage.*;
 
 @RestController
 @RequestMapping(value = "/games")
@@ -27,9 +30,6 @@ public class GameController {
 
     @GetMapping("/new")
     public ResponseEntity<GameInfo> startNew(
-            //TODO: add session token
-            // @CookieValue(value = "session") String session)
-            @RequestParam(required = false, value = "user") String user,
             @RequestParam(value = "cols", defaultValue = "5") Integer cols,
             @RequestParam(value = "rows", defaultValue = "5") Integer rows,
             @RequestParam(value = "mines", defaultValue = "10") Integer mines){
@@ -43,16 +43,14 @@ public class GameController {
             return new ResponseEntity<>(game, HttpStatus.CREATED);
 
         } catch(Exception e){
-            LOGGER.error(String.format(NEW_GAME_ERROR, user), e);
+            LOGGER.error(String.format(NEW_GAME_ERROR, get(USERNAME)), e);
             return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/{move}")
     public ResponseEntity<GameInfo> makeMove(
-            // @CookieValue(value = "session") String session)
             @PathVariable CellState move,
-            @RequestParam(required = false, value = "user") String user,
             @RequestParam(value = "game_id") String gameId,
             @RequestParam(value = "posX") Integer posX,
             @RequestParam(value = "posY") Integer posY){
@@ -73,8 +71,6 @@ public class GameController {
 
     @PutMapping(value = "/pause")
     public ResponseEntity<GameInfo> pause(
-            // @CookieValue(value = "session") String session)
-            @RequestParam(required = false, value = "user") String user,
             @RequestParam(value = "game_id") final String gameId) {
         try {
             GameInfo game = gameService.pause(gameId);
@@ -91,8 +87,6 @@ public class GameController {
     }
     @DeleteMapping(value = "/delete")
     public ResponseEntity delete(
-            // @CookieValue(value = "session") String session)
-            @RequestParam(required = false, value = "user") String user,
             @RequestParam(value = "game_id") final String gameId) {
         try {
             gameService.delete(gameId);

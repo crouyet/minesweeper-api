@@ -8,6 +8,7 @@ import java.util.Map;
 public class LocalStorage {
 
     public static final String USERNAME = "user";
+    public static final String SESSION_TOKEN = "token";
 
     private static ThreadLocal<Map<String, String>> userInfo = ThreadLocal.withInitial(Maps::newHashMap);
 
