@@ -32,7 +32,7 @@ public class UserController {
         try {
             userService.create(username);
             RSD.save(RSD.USERNAME, username);
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+            return new ResponseEntity(HttpStatus.CREATED);
         } catch(Exception e){
             LOGGER.error(String.format(SAVE_ERROR,username), e);
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
