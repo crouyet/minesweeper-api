@@ -8,10 +8,14 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
 public class GameInterceptor extends HandlerInterceptorAdapter {
+
+    private static final String SET_COOKIE = "Set-Cookie";
+    private static final Integer MAX_AGE_DEFAULT = 365 * 24 * 60 * 60 * 1000;
 
 
     @Override
@@ -26,7 +30,14 @@ public class GameInterceptor extends HandlerInterceptorAdapter {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object o, Exception e) {
+
+        if(Objects.nonNull(RSD.get(RSD.USERNAME))) {
+            this.addCookie(response, generateCookie(RSD.USERNAME, RSD.get(RSD.USERNAME), MAX_AGE_DEFAULT));
+        } else {
+            this.addCookie(response, generateCookie(RSD.USERNAME, "", 0));
+        }
+
         RSD.clear();
     }
 
@@ -40,5 +51,26 @@ public class GameInterceptor extends HandlerInterceptorAdapter {
                 .filter(c -> c.getName().equals(RSD.USERNAME))
                 .findFirst()
                 .map(Cookie::getValue);
+    }
+
+
+    private void addCookie(HttpServletResponse response, Cookie cookie){
+        if(response.getHeaders(SET_COOKIE)
+                .stream()
+                .noneMatch(responseCookie -> responseCookie.startsWith(cookie.getName()))) {
+
+            response.addHeader(SET_COOKIE, cookie.getValue());
+        }
+    }
+
+    private Cookie generateCookie(String cookieName, String cookieValue, int maxAge) {
+
+        Cookie cookie = new Cookie(cookieName, cookieValue);
+        cookie.setSecure(Boolean.TRUE);
+        cookie.setHttpOnly(Boolean.TRUE);
+        cookie.setPath("/");
+        cookie.setMaxAge(maxAge);
+
+        return cookie;
     }
 }
