@@ -41,7 +41,7 @@ class GameServiceTest {
         Integer POS_X = 1;
         Integer POS_Y = 0;
 
-        GameInfo game =  new GameInfo("id", "UNKNOWN", null, null, GameStatus.NEW, INIT_COLS, INIT_ROWS, INIT_MINES,  new ArrayList<>());
+        GameInfo game =  new GameInfo("id", null, null, GameStatus.NEW, INIT_COLS, INIT_ROWS, INIT_MINES,  new ArrayList<>());
         game.createBoard();
         game.getBoard().get(0).setMine(true);
 

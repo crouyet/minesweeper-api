@@ -18,7 +18,7 @@ class GameInfoTest {
 
     @BeforeEach
     void setUp() {
-        game =  new GameInfo("id", "UNKNOWN", null, null, GameStatus.NEW, INIT_COLS, INIT_ROWS, INIT_MINES, null );
+        game =  new GameInfo("id", null, null, GameStatus.NEW, INIT_COLS, INIT_ROWS, INIT_MINES, null );
     }
     @Test
     void createBoard_ok() {
