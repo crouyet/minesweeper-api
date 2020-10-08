@@ -20,6 +20,10 @@ public class UserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
+    private static final String SAVE_ERROR = "Error trying to save user [%s]";
+    private static final String GET_ERROR = "Error trying to get user [%s]";
+    private static final String DELETE_ERROR = "Error trying to delete user [%s]";
+
     @Autowired
     private UserService userService;
 
@@ -30,7 +34,7 @@ public class UserController {
             RSD.save(RSD.USERNAME, username);
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch(Exception e){
-            LOGGER.error("Exception trying to save user [" + username + "]", e);
+            LOGGER.error(String.format(SAVE_ERROR,username), e);
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -44,7 +48,7 @@ public class UserController {
             return ResponseEntity.ok(user);
 
         } catch(Exception e){
-            LOGGER.error("Exception trying to save user [" + username + "]", e);
+            LOGGER.error(String.format(GET_ERROR,username), e);
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -56,7 +60,7 @@ public class UserController {
             RSD.clear();
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch(Exception e){
-            LOGGER.error("Exception trying to delete user [" + username + "]", e);
+            LOGGER.error(String.format(DELETE_ERROR,username), e);
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

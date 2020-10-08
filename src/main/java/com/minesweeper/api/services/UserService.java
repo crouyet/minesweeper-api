@@ -18,6 +18,7 @@ public class UserService {
 
     public static final String UNKNOWN = "UNKNOWN";
     private static final String INVALID_NAME = "Invalid username [%s]";
+    private static final String INVALID_USER_GAME = "Invalid username for game [%s]";
 
     @Autowired
     private UserRepository userRepository;
@@ -41,11 +42,7 @@ public class UserService {
 
     public void saveNewGame(GameInfo newGame) {
 
-        User user = getUser().orElseGet(() -> {
-            User u = new User(UNKNOWN);
-            userRepository.save(u);
-            return u;
-        });
+        User user = getUser().orElseGet(() -> new User(UNKNOWN));
 
         user.getGames().put(newGame.getId(), newGame);
 
@@ -62,7 +59,7 @@ public class UserService {
                 .map(u -> {
                     u.getGames().put(game.getId(), game);
                     return u;
-                }).orElseThrow(() -> new RuntimeException("invalid username"));
+                }).orElseThrow(() -> new InvalidUserException(String.format(INVALID_USER_GAME, game.getId())));
 
         userRepository.save(user);
     }
@@ -73,7 +70,7 @@ public class UserService {
                 .map(u -> {
                     u.getGames().remove(gameId);
                     return u;
-                }).orElseThrow(() -> new RuntimeException("invalid username"));
+                }).orElseThrow(() -> new InvalidUserException(String.format(INVALID_USER_GAME, gameId)));
 
         userRepository.save(user);
     }
