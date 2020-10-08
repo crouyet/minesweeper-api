@@ -7,8 +7,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.minesweeper.api.model.CellState.CLOSE;
-
 @Data
 @AllArgsConstructor
 public class User implements Serializable {

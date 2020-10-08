@@ -5,6 +5,7 @@ import com.minesweeper.api.exceptions.InvalidUserException;
 import com.minesweeper.api.model.GameInfo;
 import com.minesweeper.api.model.User;
 import com.minesweeper.api.repository.UserRepository;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,14 +41,11 @@ public class UserService {
 
     public void saveNewGame(GameInfo newGame) {
 
-        User user = userRepository.findById(getUsername())
-                .orElseGet(() -> userRepository.findById(UNKNOWN)
-                        .orElseGet(() -> {
-                            User u = new User(UNKNOWN);
-                            userRepository.save(u);
-                            return u;
-                        })
-                );
+        User user = getUser().orElseGet(() -> {
+            User u = new User(UNKNOWN);
+            userRepository.save(u);
+            return u;
+        });
 
         user.getGames().put(newGame.getId(), newGame);
 
@@ -55,12 +53,12 @@ public class UserService {
     }
 
     public Optional<GameInfo> getGame(String gameId){
-        return userRepository.findById(getUsername()).map(user -> user.getGames().get(gameId));
+        return getUser().map(user -> user.getGames().get(gameId));
     }
 
     public void updateGame(GameInfo game){
 
-        User user = userRepository.findById(getUsername())
+        User user = getUser()
                 .map(u -> {
                     u.getGames().put(game.getId(), game);
                     return u;
@@ -71,7 +69,7 @@ public class UserService {
 
     public void deleteGame(String gameId){
 
-        User user = userRepository.findById(getUsername())
+        User user = getUser()
                 .map(u -> {
                     u.getGames().remove(gameId);
                     return u;
@@ -80,6 +78,19 @@ public class UserService {
         userRepository.save(user);
     }
 
+
+    private Optional<User> getUser() {
+        Optional<User> user;
+
+        if(Strings.isBlank(getUsername())) {
+            user = userRepository.findById(UNKNOWN);
+        } else {
+            user = userRepository.findById(getUsername());
+        }
+
+        return user;
+    }
+    
     private String getUsername(){
         return RSD.get().get(USERNAME);
     }
