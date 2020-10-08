@@ -7,12 +7,13 @@ class MinesweeperClient {
         this.basePath = basePath;
     }
 
-    request(endpoint = "", options = {}) {
+    request(endpoint = "", options = {}, user = null) {
 
         let url = this.basePath + endpoint;
 
         let headers = {
-            'Content-type': 'application/json'
+            'Content-type': 'application/json',
+            'cookie': 'user='+user
         };
 
         let config = {
@@ -59,9 +60,10 @@ class MinesweeperClient {
     /**
      *
      * @param options-> optional: cols, rows, mines
+     * @param userId -> optional
      * @returns GameInfo
      */
-    newGame(options) {
+    newGame(options, userId) {
         let qs = options ? "?" + querystring.stringify(options) : "";
 
         let url = "/games" + qs;
@@ -69,17 +71,18 @@ class MinesweeperClient {
             method: 'GET'
         };
 
-        return this.request(url, config);
+        return this.request(url, config, userId);
     }
 
     /**
      *
-     * @param id -> game id
+     * @param id -> required: game id
      * @param move -> required: CLOSE, DISCOVER, FLAG, QUESTION
-     * @param options-> required: posX, posY
+     * @param options -> required: posX, posY
+     * @param userId -> optional
      * @returns GameInfo
      */
-    makeMove(id, move, options) {
+    makeMove(id, move, options, userId) {
         let qs = options ? "?" + querystring.stringify(options) : "";
 
         let url = "/games/" + id + "/" + move + qs;
@@ -87,35 +90,37 @@ class MinesweeperClient {
             method: 'PUT'
         };
 
-        return this.request(url, config);
+        return this.request(url, config, userId);
     }
 
     /**
      *
-     * @param id -> game id
+     * @param id -> required: game id
+     * @param userId -> optional
      * @returns GameInfo
      */
-    pauseGame(id) {
+    pauseGame(id, userId) {
         let url = "/games/" + id + "/pause";
         let config = {
             method: 'PUT'
         };
 
-        return this.request(url, config);
+        return this.request(url, config, userId);
     }
 
     /**
      *
-     * @param id -> game id
+     * @param id -> required: game id
+     * @param userId -> optional
      * @returns GameInfo
      */
-    deleteGame(id) {
+    deleteGame(id, userId) {
         let url = "/games/" + id + "/delete";
         let config = {
             method: 'DELETE'
         };
 
-        return this.request(url, config);
+        return this.request(url, config, userId);
     }
 
 }
