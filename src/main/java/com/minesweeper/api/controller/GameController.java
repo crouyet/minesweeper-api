@@ -47,10 +47,10 @@ public class GameController {
         }
     }
 
-    @PutMapping("/{move}")
+    @PutMapping("{id}/{move}")
     public ResponseEntity<GameInfo> makeMove(
             @PathVariable CellState move,
-            @RequestParam(value = "game_id") String gameId,
+            @PathVariable(value = "id") String gameId,
             @RequestParam(value = "posX") Integer posX,
             @RequestParam(value = "posY") Integer posY){
 
@@ -68,9 +68,9 @@ public class GameController {
         }
     }
 
-    @PutMapping(value = "/pause")
+    @PutMapping(value = "{id}/pause")
     public ResponseEntity<GameInfo> pause(
-            @RequestParam(value = "game_id") final String gameId) {
+            @PathVariable(value = "id") String gameId) {
         try {
             GameInfo game = gameService.pause(gameId);
             return ResponseEntity.ok(game);
@@ -84,9 +84,9 @@ public class GameController {
             return new ResponseEntity(e,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @DeleteMapping(value = "/delete")
+    @DeleteMapping(value = "{id}/delete")
     public ResponseEntity delete(
-            @RequestParam(value = "game_id") final String gameId) {
+            @PathVariable(value = "id") String gameId) {
         try {
             gameService.delete(gameId);
             return new ResponseEntity(HttpStatus.NO_CONTENT);
