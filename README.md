@@ -3,7 +3,7 @@
 #####The list of tasks done (prioritized from most important to least important):
 
 - [x]  Design and implement  a documented RESTful API for the game (think of a mobile app for your API)
-- [ ]  Implement an API client library for the API designed above. Ideally, in a different language, of your preference, to the one used for the API
+- [x]  Implement an API client library for the API designed above. Ideally, in a different language, of your preference, to the one used for the API
 - [x]  When a cell with no adjacent mines is revealed, all adjacent squares will be revealed (and repeat)
 - [x]  Ability to 'flag' a cell with a question mark or red flag
 - [x]  Detect when game is over
@@ -21,7 +21,11 @@ Spring Boot Application using Java 11 with Redis
 Swagger API documentation for the game
 
 * [Local Link](http://localhost:8080/swagger-ui.html#/)
-* [Prod Link ](https://*****/swagger-ui.html#/)
+* [Prod Link ](https://rouyet-minesweeper-api.herokuapp.com/swagger-ui.html#/)
+
+###API Client Library
+Designed with Node.js 
+* [Client Class](https://github.com/crouyet/minesweeper-api/blob/master/api-client-lib/index.js)
 
 ###Decisions taken and Important notes
 * Users/accounts was implemented without a password or secure session owing to the given time. The implementation of this would be creating jwt tokens when the user logged in. So the user should send the JWT in each request and the backend should check if the token is valid and not expired
