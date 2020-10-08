@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 import static com.minesweeper.api.model.CellState.DISCOVER;

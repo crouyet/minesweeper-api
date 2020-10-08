@@ -8,7 +8,7 @@
 - [x]  Ability to 'flag' a cell with a question mark or red flag
 - [x]  Detect when game is over
 - [x]  Persistence
-- [ ]  Time tracking
+- [x]  Time tracking
 - [x]  Ability to start a new game and preserve/resume the old ones
 - [x]  Ability to select the game parameters: number of rows, columns, and mines
 - [x]  Ability to support multiple users/accounts
