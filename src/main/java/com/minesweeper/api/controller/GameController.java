@@ -1,6 +1,5 @@
 package com.minesweeper.api.controller;
 
-import com.minesweeper.api.config.LocalStorage;
 import com.minesweeper.api.model.CellState;
 import com.minesweeper.api.model.GameInfo;
 import com.minesweeper.api.services.GameService;
@@ -11,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.minesweeper.api.config.LocalStorage.*;
+import static com.minesweeper.api.config.RSD.*;
 
 @RestController
 @RequestMapping(value = "/games")

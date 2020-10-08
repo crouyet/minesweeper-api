@@ -1,6 +1,6 @@
 package com.minesweeper.api.interceptor;
 
-import com.minesweeper.api.config.LocalStorage;
+import com.minesweeper.api.config.RSD;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -17,17 +17,17 @@ public class GameInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         //Clear storage because is possible that previous data remains on the threadLocal
-        LocalStorage.clear();
+        RSD.clear();
 
         getUsername(request)
-                .ifPresent( user -> LocalStorage.save(LocalStorage.USERNAME, user));
+                .ifPresent( user -> RSD.save(RSD.USERNAME, user));
 
         return true;
     }
 
     @Override
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) {
-        LocalStorage.clear();
+        RSD.clear();
     }
 
     private Optional<String> getUsername(HttpServletRequest request) {
@@ -37,7 +37,7 @@ public class GameInterceptor extends HandlerInterceptorAdapter {
 
     private Optional<String> getUsernameFromCookie(Cookie[] cookies) {
         return Arrays.stream(cookies)
-                .filter(c -> c.getName().equals(LocalStorage.USERNAME))
+                .filter(c -> c.getName().equals(RSD.USERNAME))
                 .findFirst()
                 .map(Cookie::getValue);
     }

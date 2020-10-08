@@ -5,7 +5,7 @@ import com.google.common.collect.Maps;
 
 import java.util.Map;
 
-public class LocalStorage {
+public class RSD {
 
     public static final String USERNAME = "user";
     public static final String SESSION_TOKEN = "token";

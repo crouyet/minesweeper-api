@@ -1,6 +1,6 @@
 package com.minesweeper.api.services;
 
-import com.minesweeper.api.config.LocalStorage;
+import com.minesweeper.api.config.RSD;
 import com.minesweeper.api.exceptions.InvalidUserException;
 import com.minesweeper.api.model.GameInfo;
 import com.minesweeper.api.model.User;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static com.minesweeper.api.config.LocalStorage.USERNAME;
+import static com.minesweeper.api.config.RSD.USERNAME;
 
 @Service
 public class UserService {
@@ -75,6 +75,6 @@ public class UserService {
     }
 
     private String getUsername(){
-        return LocalStorage.get().get(USERNAME);
+        return RSD.get().get(USERNAME);
     }
 }
