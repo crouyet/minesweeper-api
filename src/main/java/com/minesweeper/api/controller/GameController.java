@@ -20,6 +20,7 @@ public class GameController {
     private static final String NEW_GAME_PARAMS_ERROR = "Mines have to be less than squares available";
     private static final String MAKE_MOVE_ERROR = "Error trying to make a move for [%s]";
     private static final String PAUSE_ERROR = "Error trying to pause game [%s]";
+    private static final String DELETE_ERROR = "Error trying to delete game [%s]";
 
     @Autowired
     GameService gameService;
@@ -47,11 +48,12 @@ public class GameController {
         }
     }
 
-    @PutMapping("{id}/{move}")
+    @PutMapping("/{move}")
     public ResponseEntity<GameInfo> makeMove(
             // @CookieValue(value = "session") String session)
-            @PathVariable(value = "id") String gameId,
             @PathVariable CellState move,
+            @RequestParam(required = false, value = "user") String user,
+            @RequestParam(value = "game_id") String gameId,
             @RequestParam(value = "posX") Integer posX,
             @RequestParam(value = "posY") Integer posY){
 
@@ -69,10 +71,11 @@ public class GameController {
         }
     }
 
-    @PutMapping(value = "{id}/pause")
-    public ResponseEntity<GameInfo> pauseGame(
+    @PutMapping(value = "/pause")
+    public ResponseEntity<GameInfo> pause(
             // @CookieValue(value = "session") String session)
-            @PathVariable(value = "id") final String gameId) {
+            @RequestParam(required = false, value = "user") String user,
+            @RequestParam(value = "game_id") final String gameId) {
         try {
             GameInfo game = gameService.pause(gameId);
             return ResponseEntity.ok(game);
@@ -84,6 +87,24 @@ public class GameController {
         } catch (final Exception e) {
             LOGGER.error(String.format(PAUSE_ERROR, gameId), e);
             return new ResponseEntity(e,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @DeleteMapping(value = "/delete")
+    public ResponseEntity delete(
+            // @CookieValue(value = "session") String session)
+            @RequestParam(required = false, value = "user") String user,
+            @RequestParam(value = "game_id") final String gameId) {
+        try {
+            gameService.delete(gameId);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+
+        } catch(IllegalArgumentException e){
+            LOGGER.error(e.getMessage(), e);
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+
+        } catch (final Exception e) {
+            LOGGER.error(String.format(DELETE_ERROR, gameId), e);
+            return new ResponseEntity<>(e,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

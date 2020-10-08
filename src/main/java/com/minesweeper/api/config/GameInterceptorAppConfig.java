@@ -1,0 +1,18 @@
+package com.minesweeper.api.config;
+
+import com.minesweeper.api.interceptor.GameInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+@Component
+public class GameInterceptorAppConfig extends WebMvcConfigurerAdapter {
+   @Autowired
+   GameInterceptor productServiceInterceptor;
+
+   @Override
+   public void addInterceptors(InterceptorRegistry registry) {
+      registry.addInterceptor(productServiceInterceptor);
+   }
+}

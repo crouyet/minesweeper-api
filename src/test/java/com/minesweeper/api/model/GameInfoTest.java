@@ -1,5 +1,6 @@
 package com.minesweeper.api.model;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -13,20 +14,23 @@ class GameInfoTest {
     private static Integer INIT_COLS = 3;
     private static Integer INIT_ROWS = 4;
     private static Integer INIT_MINES = 1;
+    private GameInfo game;
 
+    @BeforeEach
+    void setUp() {
+        game =  new GameInfo("id", "UNKNOWN", null, null, GameStatus.NEW, INIT_COLS, INIT_ROWS, INIT_MINES, null );
+    }
     @Test
     void createBoard_ok() {
 
-       GameInfo newGame =  new GameInfo("id",null, null, GameStatus.NEW, INIT_COLS, INIT_ROWS, INIT_MINES, null );
+        game.createBoard();
+        game.addMines();
 
-       newGame.createBoard();
-       newGame.addMines();
+        assertNotNull(game);
 
-        assertNotNull(newGame);
+        assertEquals(INIT_COLS * INIT_ROWS, game.getBoard().size());
 
-        assertEquals(INIT_COLS * INIT_ROWS, newGame.getBoard().size());
-
-        assertEquals(INIT_MINES, newGame.getBoard()
+        assertEquals(INIT_MINES, game.getBoard()
                 .stream()
                 .filter(Cell::getMine)
                 .collect(Collectors.toList())
@@ -39,7 +43,6 @@ class GameInfoTest {
         Integer POS_X = 1;
         Integer POS_Y = 0;
 
-        GameInfo game =  new GameInfo("id", null, null, GameStatus.NEW, INIT_COLS, INIT_ROWS, INIT_MINES,  null);
 
         game.createBoard();
         game.getBoard().get(0).setMine(true);
@@ -61,8 +64,8 @@ class GameInfoTest {
         Integer POS_X = 0;
         Integer POS_Y = 0;
 
-        GameInfo game =  new GameInfo("id", Instant.now(), null, GameStatus.PLAYING, INIT_COLS, INIT_ROWS, INIT_MINES,  null);
-
+        game.setStatus(GameStatus.PLAYING);
+        game.setStartTime(Instant.now());
         game.createBoard();
         game.getBoard().get(0).setState(CellState.FLAG);
         game.revealCell(POS_X, POS_Y);
@@ -80,8 +83,6 @@ class GameInfoTest {
 
         Integer POS_X = 0;
         Integer POS_Y = 0;
-
-        GameInfo game =  new GameInfo("id", null, null, GameStatus.NEW, INIT_COLS, INIT_ROWS, INIT_MINES,  null);
 
         game.createBoard();
         game.getBoard().get(0).setMine(true);

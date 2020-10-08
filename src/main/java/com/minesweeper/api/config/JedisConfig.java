@@ -1,6 +1,7 @@
 package com.minesweeper.api.config;
 
 import com.minesweeper.api.model.GameInfo;
+import com.minesweeper.api.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -21,8 +22,8 @@ public class JedisConfig {
 
     @Bean
     @Autowired
-    public RedisTemplate<String, GameInfo> redisTemplate(JedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, GameInfo> template = new RedisTemplate<>();
+    public RedisTemplate<String, User> redisTemplate(JedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, User> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
         return template;
     }

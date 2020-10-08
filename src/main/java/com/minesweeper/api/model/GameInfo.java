@@ -19,6 +19,7 @@ public class GameInfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String id;
+    private String username;
     private Instant startTime;
     private Instant pauseTime;
     private GameStatus status;

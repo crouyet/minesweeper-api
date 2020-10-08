@@ -2,7 +2,6 @@ package com.minesweeper.api.services;
 
 import com.minesweeper.api.model.GameInfo;
 import com.minesweeper.api.model.GameStatus;
-import com.minesweeper.api.repository.GameRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -22,7 +21,7 @@ class GameServiceTest {
     private GameService gameService;
 
     @Mock
-    private GameRepository gameRepository;
+    private UserService userService;
 
     private static Integer INIT_COLS = 3;
     private static Integer INIT_ROWS = 4;
@@ -42,11 +41,11 @@ class GameServiceTest {
         Integer POS_X = 1;
         Integer POS_Y = 0;
 
-        GameInfo game =  new GameInfo("id", null, null, GameStatus.NEW, INIT_COLS, INIT_ROWS, INIT_MINES,  new ArrayList<>());
+        GameInfo game =  new GameInfo("id", "UNKNOWN", null, null, GameStatus.NEW, INIT_COLS, INIT_ROWS, INIT_MINES,  new ArrayList<>());
         game.createBoard();
         game.getBoard().get(0).setMine(true);
 
-        when(gameRepository.findById("id")).thenReturn(Optional.of(game));
+        when(userService.getGame("id")).thenReturn(Optional.of(game));
 
         GameInfo newGame = this.gameService.makeMove(DISCOVER, "id", POS_X, POS_Y);
 

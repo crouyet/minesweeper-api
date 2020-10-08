@@ -4,7 +4,6 @@ import com.minesweeper.api.exceptions.InvalidGameException;
 import com.minesweeper.api.exceptions.InvalidGameStatusException;
 import com.minesweeper.api.model.CellState;
 import com.minesweeper.api.model.GameInfo;
-import com.minesweeper.api.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ public class GameService {
     private static final String GAME_FINISHED = "The Game is %s, can't update it.";
 
     @Autowired
-    private GameRepository gameRepository;
+    private UserService userService;
 
     public GameInfo create(Integer cols, Integer rows, Integer mines){
         GameInfo newGame = GameInfo.builder()
@@ -37,34 +36,37 @@ public class GameService {
         newGame.createBoard();
         newGame.addMines();
 
-        gameRepository.save(newGame);
+        userService.saveNewGame(newGame);
 
         return newGame;
     }
 
     public GameInfo pause(String gameId) {
-        GameInfo game = gameRepository
-                .findById(gameId)
-                .map( gameInfo -> {
-                    gameInfo.setPauseTime(Instant.now());
-                    gameInfo.setStatus(PAUSED);
-                    return gameInfo;
+        GameInfo game = userService.getGame(gameId)
+                .map( g -> {
+                    g.setPauseTime(Instant.now());
+                    g.setStatus(PAUSED);
+                    return g;
                 })
                 .orElseThrow( () -> new InvalidGameException(String.format(GAME_NOT_FOUND, gameId)));
 
-        gameRepository.update(game);
+        userService.updateGame(game);
 
         return game;
     }
 
+
+    public void delete(String gameId) {
+        userService.deleteGame(gameId);
+    }
+
     public GameInfo makeMove(CellState action, String gameId, Integer posX, Integer posY){
 
-        GameInfo game = gameRepository
-                .findById(gameId)
-                .map( gameInfo -> this.move(action, posX, posY, gameInfo))
+        GameInfo game = userService.getGame(gameId)
+                .map(g -> this.move(action, posX, posY, g))
                 .orElseThrow( () -> new InvalidGameException(String.format(GAME_NOT_FOUND, gameId)));
 
-        gameRepository.update(game);
+        userService.updateGame(game);
 
         return game;
     }
