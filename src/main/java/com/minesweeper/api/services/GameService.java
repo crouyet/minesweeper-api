@@ -93,7 +93,8 @@ public class GameService {
             duration = Duration.between( game.getStartTime(), game.getPauseTime());
         }
 
-        game.setStartTime(Instant.now().plus(duration));
+        game.setStartTime(Instant.now().minus(duration));
+        game.setPauseTime(null);
         game.setStatus(PLAYING);
     }
 

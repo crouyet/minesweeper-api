@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.minesweeper.api.model.CellState.*;
 
@@ -40,14 +41,22 @@ public class Cell implements Serializable {
     public void reveal(List<Cell> board) {
         this.setState(DISCOVER);
 
-        board.stream()
-                .filter(otherCell -> otherCell.isDiscoverable() && this.isAdjacent(otherCell))
-                .forEach(otherCell -> otherCell.reveal(board));
+        List<Cell> adjacentCells = getAdjacents(board);
 
+        if (!adjacentCells.isEmpty()
+                && adjacentCells.stream().noneMatch(Cell::isMine)) {
+            adjacentCells.forEach(otherCell -> otherCell.reveal(board));
+        }
+    }
+
+    private List<Cell> getAdjacents(List<Cell> board) {
+        return board.stream()
+                .filter(otherCell -> otherCell.isDiscoverable() && this.isAdjacent(otherCell))
+                .collect(Collectors.toList());
     }
 
     private boolean isDiscoverable() {
-        return !this.isMine() && !this.isDiscovered() && !this.withFlag();
+        return !this.isDiscovered() && !this.withFlag();
     }
 
     private boolean isAdjacent(Cell otherCell){

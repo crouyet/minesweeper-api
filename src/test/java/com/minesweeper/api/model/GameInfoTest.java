@@ -11,9 +11,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameInfoTest {
 
-    private static Integer INIT_COLS = 3;
-    private static Integer INIT_ROWS = 4;
-    private static Integer INIT_MINES = 1;
+    private static Integer INIT_COLS = 2;
+    private static Integer INIT_ROWS = 2;
+    private static Integer INIT_MINES = 3;
     private GameInfo game;
 
     @BeforeEach
@@ -46,6 +46,8 @@ class GameInfoTest {
 
         game.createBoard();
         game.getBoard().get(0).setMine(true);
+        game.getBoard().get(1).setMine(true);
+        game.getBoard().get(3).setMine(true);
         game.revealCell(POS_X, POS_Y);
 
         assertNotNull(game);

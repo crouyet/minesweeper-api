@@ -7,6 +7,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -35,6 +37,7 @@ class GameServiceTest {
         assertEquals(INIT_COLS, newGame.getCols());
 
     }
+
     @Test
     void makeMove_ok() {
 
@@ -50,7 +53,48 @@ class GameServiceTest {
         GameInfo newGame = this.gameService.makeMove(DISCOVER, "id", POS_X, POS_Y);
 
         assertNotNull(newGame);
-        assertEquals(GameStatus.WON, newGame.getStatus());
+        assertEquals(GameStatus.PLAYING, newGame.getStatus());
+
+    }
+
+    @Test
+    void makeMove_paused() {
+
+        Integer POS_X = 1;
+        Integer POS_Y = 1;
+
+        Instant init = Instant.now();
+        Instant paused = Instant.now().plusSeconds(5);
+        GameInfo game =  new GameInfo("id", init, paused, GameStatus.PAUSED, INIT_COLS, INIT_ROWS, INIT_MINES,  new ArrayList<>());
+        game.createBoard();
+        game.getBoard().get(0).setMine(true);
+        game.getBoard().get(1).setMine(true);
+        game.getBoard().get(11).setMine(true);
+
+        when(userService.getGame("id")).thenReturn(Optional.of(game));
+
+        this.gameService.makeMove(DISCOVER, "id", POS_X, POS_Y);
+
+        assertNotNull(game);
+        assertNull(game.getPauseTime());
+        assertFalse(Duration.between(game.getStartTime(), Instant.now().minusSeconds(5)).isNegative());
+        assertEquals(GameStatus.PLAYING, game.getStatus());
+
+    }
+
+    @Test
+    void pause_ok() {
+
+        GameInfo game =  new GameInfo("id", Instant.now(), null, GameStatus.PLAYING, INIT_COLS, INIT_ROWS, INIT_MINES,  new ArrayList<>());
+
+        when(userService.getGame("id")).thenReturn(Optional.of(game));
+
+        this.gameService.pause("id");
+
+        assertNotNull(game);
+        assertNotNull(game.getPauseTime());
+        assertFalse(Duration.between(game.getStartTime(), game.getPauseTime()).isNegative());
+        assertEquals(GameStatus.PAUSED, game.getStatus());
 
     }
 
