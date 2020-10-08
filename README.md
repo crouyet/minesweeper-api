@@ -1,6 +1,6 @@
 # minesweeper-api
 
-#####The list of tasks done (prioritized from most important to least important):
+##### The list of tasks done (prioritized from most important to least important):
 
 - [x]  Design and implement  a documented RESTful API for the game (think of a mobile app for your API)
 - [x]  Implement an API client library for the API designed above. Ideally, in a different language, of your preference, to the one used for the API
