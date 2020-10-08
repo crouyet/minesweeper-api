@@ -41,7 +41,13 @@ public class UserService {
     public void saveNewGame(GameInfo newGame) {
 
         User user = userRepository.findById(getUsername())
-                .orElseGet(() -> userRepository.findById(UNKNOWN).get());
+                .orElseGet(() -> userRepository.findById(UNKNOWN)
+                        .orElseGet(() -> {
+                            User u = new User(UNKNOWN);
+                            userRepository.save(u);
+                            return u;
+                        })
+                );
 
         user.getGames().put(newGame.getId(), newGame);
 

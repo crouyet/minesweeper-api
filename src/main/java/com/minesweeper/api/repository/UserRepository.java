@@ -35,7 +35,12 @@ public class UserRepository implements  IRepository<User> {
     @Override
     public Optional<User> findById(String id) {
         LOGGER.info("Retrieving user [{}]", id);
-        return  Optional.ofNullable((User) hashOperations.get(USER_KEY,id));
+        try{
+            return  Optional.of((User) hashOperations.get(USER_KEY,id));
+        } catch (Exception e){
+            LOGGER.warn("User not  found [{}]", id);
+            return Optional.empty();
+        }
     }
     @Override
     public void update(User user) {
