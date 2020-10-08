@@ -36,8 +36,7 @@ public class UserService {
         if (userRepository.findById(username).isPresent()){
             throw new InvalidUserException(String.format(INVALID_NAME, username));
         }
-
-        userRepository.save(new User(getUsername()));
+        userRepository.save(new User(username));
     }
 
     public void saveNewGame(GameInfo newGame) {
