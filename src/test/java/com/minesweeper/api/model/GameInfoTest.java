@@ -1,6 +1,8 @@
 package com.minesweeper.api.model;
 
 import org.junit.jupiter.api.Test;
+
+import java.time.Instant;
 import java.util.stream.Collectors;
 
 import static com.minesweeper.api.model.CellState.DISCOVER;
@@ -15,7 +17,7 @@ class GameInfoTest {
     @Test
     void createBoard_ok() {
 
-       GameInfo newGame =  new GameInfo("id", GameStatus.NEW, INIT_COLS, INIT_ROWS, INIT_MINES, null );
+       GameInfo newGame =  new GameInfo("id",null, null, GameStatus.NEW, INIT_COLS, INIT_ROWS, INIT_MINES, null );
 
        newGame.createBoard();
        newGame.addMines();
@@ -37,7 +39,7 @@ class GameInfoTest {
         Integer POS_X = 1;
         Integer POS_Y = 0;
 
-        GameInfo game =  new GameInfo("id", GameStatus.NEW, INIT_COLS, INIT_ROWS, INIT_MINES,  null);
+        GameInfo game =  new GameInfo("id", null, null, GameStatus.NEW, INIT_COLS, INIT_ROWS, INIT_MINES,  null);
 
         game.createBoard();
         game.getBoard().get(0).setMine(true);
@@ -59,7 +61,7 @@ class GameInfoTest {
         Integer POS_X = 0;
         Integer POS_Y = 0;
 
-        GameInfo game =  new GameInfo("id", GameStatus.PLAYING, INIT_COLS, INIT_ROWS, INIT_MINES,  null);
+        GameInfo game =  new GameInfo("id", Instant.now(), null, GameStatus.PLAYING, INIT_COLS, INIT_ROWS, INIT_MINES,  null);
 
         game.createBoard();
         game.getBoard().get(0).setState(CellState.FLAG);
@@ -79,7 +81,7 @@ class GameInfoTest {
         Integer POS_X = 0;
         Integer POS_Y = 0;
 
-        GameInfo game =  new GameInfo("id", GameStatus.NEW, INIT_COLS, INIT_ROWS, INIT_MINES,  null);
+        GameInfo game =  new GameInfo("id", null, null, GameStatus.NEW, INIT_COLS, INIT_ROWS, INIT_MINES,  null);
 
         game.createBoard();
         game.getBoard().get(0).setMine(true);

@@ -6,10 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.time.Instant;
+import java.util.*;
 
 import static com.minesweeper.api.model.GameStatus.*;
 
@@ -21,6 +19,8 @@ public class GameInfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String id;
+    private Instant startTime;
+    private Instant pauseTime;
     private GameStatus status;
     private Integer cols;
     private Integer rows;
